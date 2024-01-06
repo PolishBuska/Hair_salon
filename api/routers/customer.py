@@ -8,7 +8,7 @@ router = APIRouter(
 
 
 @router.get('/schedules')
-async def get_schedules(current_user: int = Depends(AuthProvider().get_current_user)):
+async def get_schedules():
     ...
 
 

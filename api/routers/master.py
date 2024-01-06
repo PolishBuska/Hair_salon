@@ -17,7 +17,7 @@ router = APIRouter(
 
 @router.post('/services')
 @inject
-async def create_service(user: int,
+async def create_service(
                          service_data: ServiceCreate,
                          repo=Depends(get_repository(model=Service, repo=MasterRepositoryInterface)),
                          ):
