@@ -23,7 +23,7 @@ class User(Base):
     nickname: Mapped[str] = mapped_column(unique=True)
     status: Mapped[bool] = mapped_column(default=True)
     password: Mapped[str]
-    role_id: Mapped[int] = mapped_column(ForeignKey('role.id'), default=1)
+    role_id: Mapped[int] = mapped_column(ForeignKey('roles.id'), default=1)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False,
                         server_default=func.now())

@@ -12,8 +12,8 @@ class Roles(int, Enum):
 
 
 class UserBase(BaseModel):
-    username: Annotated[str, constr(min_length=5, max_length=50)]
-    email: Annotated[EmailStr, constr(max_length=50, min_length=10)]
+    nickname: Annotated[str, constr(min_length=5, max_length=50)]
+    email: Annotated[EmailStr, constr(max_length=50, min_length=4)]
     role_id: Roles
 
 

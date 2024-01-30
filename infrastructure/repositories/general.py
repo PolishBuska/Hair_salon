@@ -8,7 +8,7 @@ class GenericRepository:
         self.session = session
 
     async def create(self, data: dict) -> dict | None:
-        stmt = insert(self.model).values(data).returning(self.model.id)
+        stmt = insert(self.model).values(data).returning(self.model)
         res = await self.session.execute(stmt)
         await self.session.commit()
         return res.scalar()
