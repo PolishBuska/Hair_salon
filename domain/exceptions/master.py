@@ -1,0 +1,6 @@
+
+class MasterServiceException(Exception):
+    ...
+
+class ServiceAlreadyExist(Exception):
+    ...

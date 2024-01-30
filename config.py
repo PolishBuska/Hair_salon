@@ -12,7 +12,6 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
-    static: str
     model_config = SettingsConfigDict(env_file='.env', extra="allow")
 
     @property

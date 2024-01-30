@@ -2,6 +2,9 @@ import uvicorn
 from fastapi import FastAPI
 
 from api.routers.main import create_main_router
+
+from infrastructure.loggers.container import LoggerContainer
+
 from config import get_config
 
 

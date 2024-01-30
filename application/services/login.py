@@ -8,27 +8,27 @@ from domain.interfaces.repositories.user import UserRepositoryInterface
 
 
 class LoginService:
-    validator = AuthCredValidator()
-    jwt = AuthProvider()
+    _validator = AuthCredValidator()
+    _jwt = AuthProvider()
 
     def __init__(self, email, plain_password, repo: UserRepositoryInterface):
-        self.email = email
-        self.plain_password = plain_password
-        self.repo = repo
+        self._email = email
+        self._plain_password = plain_password
+        self._repo = repo
 
     async def login(self):
         """getting tokens"""
         try:
 
-            user_by_email = await self.repo.find_one_by_email(email=self.email)
+            user_by_email = await self._repo.find_one_by_email(email=self._email)
 
-            data = await self.validator.validate(
-                                                 plain_password=self.plain_password,
+            data = await self._validator.validate(
+                                                 plain_password=self._plain_password,
                                                  db_user=user_by_email
             )
             if not data:
                 raise WrongCredsException("Wrong credentials")
-            access_token = await self.jwt.create_access_token(data=data)
+            access_token = await self._jwt.create_access_token(data=data)
 
             return {
                 "access_token": access_token,

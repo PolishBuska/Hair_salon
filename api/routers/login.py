@@ -34,3 +34,4 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
     except AuthServiceError:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                             detail="Currently not available")
+

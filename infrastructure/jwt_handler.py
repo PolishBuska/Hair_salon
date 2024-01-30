@@ -20,7 +20,7 @@ from api.schemas.jwt import TokenPayLoad
 from domain.interfaces.repositories.general import GenericRepositoryInterface
 
 
-class AuthProvider:
+class  AuthProvider:
     config = get_config()
     SECRET_KEY = config.secret_key
     ALGORITHM = config.algorithm

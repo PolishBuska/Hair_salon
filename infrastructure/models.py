@@ -21,6 +21,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(unique=True)
     nickname: Mapped[str] = mapped_column(unique=True)
+    status: Mapped[bool] = mapped_column(default=True)
     password: Mapped[str]
     role_id: Mapped[int] = mapped_column(ForeignKey('role.id'), default=1)
     created_at = Column(TIMESTAMP(timezone=True),
