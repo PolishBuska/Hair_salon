@@ -23,7 +23,7 @@ class UserService:
         except IntegrityError as ie:
             self._logger.get_logger("WARNING").msg(f"{str(ie)}")
             raise AlreadyExist(
-                f"User {data.username} already exist. Original error {str(ie)}"
+                f"User {data.nickname} already exist. Original error {str(ie)}"
             ) from ie
         except Exception as e:
             self._logger.get_logger("WARNING").msg(f"{str(e)}")

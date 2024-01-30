@@ -1,9 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 
+from api.middleware import LoggerMiddleware
 from api.routers.main import create_main_router
-
-from infrastructure.loggers.container import LoggerContainer
 
 from config import get_config
 
@@ -11,8 +10,10 @@ from config import get_config
 def get_app():
     _application = FastAPI(
         title="Beauty_salon",
+        version="2"
 
     )
+
     main_router = create_main_router(
         prefix="/api/v2",
     )
@@ -23,6 +24,7 @@ def get_app():
 
 
 app = get_app()
+app.add_middleware(LoggerMiddleware)
 
 
 def run():
