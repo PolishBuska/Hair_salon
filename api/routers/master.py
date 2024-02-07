@@ -4,13 +4,15 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from infrastructure.dependency import get_repository
 from infrastructure.models import Service
 from infrastructure.loggers.container import LoggerContainer
+from infrastructure.jwt_handler import AuthProvider
 
 from application.services.master import MasterService
+from application.dto.user import CurrentUserDTO
 
-from domain.interfaces.repositories.master import MasterRepositoryInterface
 from domain.exceptions.master import ServiceAlreadyExist, MasterServiceException
 
 from api.schemas.master import ServiceCreate
+from infrastructure.repositories.master import MasterRepository
 
 router = APIRouter(
 
@@ -18,15 +20,20 @@ router = APIRouter(
 
 
 @router.post('/services')
-@inject
 async def create_service(
                          service_data: ServiceCreate,
-                         repo=Depends(get_repository(model=Service, repo=MasterRepositoryInterface)),
-                         logger=LoggerContainer()
-                         ):
+                         repo=Depends(get_repository(model=Service, repo=MasterRepository)),
+                         current_user: CurrentUserDTO = Depends(AuthProvider().get_current_user),
+
+):
+    logger = LoggerContainer()
     try:
         service = MasterService(repo=repo)
-        result = await service.create_service(data=service_data)
+        data = service_data.model_dump()
+        result = await service.create_service(
+            data=data,
+            current_user=current_user
+        )
         return result
     except ServiceAlreadyExist as aee:
         logger.get_logger("WARNING").msg(message=f"{str(aee)}")

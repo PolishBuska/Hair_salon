@@ -6,7 +6,7 @@ from domain.interfaces.repositories.user import UserRepositoryInterface
 from infrastructure.hasher import PwdContext
 from infrastructure.loggers.container import LoggerContainer
 
-from api.schemas.user import UserCreated
+from application.dto.user import UserDTO
 
 
 class UserService:
@@ -15,10 +15,11 @@ class UserService:
         self._pwd = PwdContext()
         self._logger = LoggerContainer()
 
-    async def register(self, data: UserCreated) -> dict:
+    async def register(self, data: UserDTO) -> dict:
         try:
-            data.password = self._pwd.pwd_context.hash(data.password)
-            result = await self._repo.add_user(data=data.model_dump())
+            hashed_password = self._pwd.pwd_context.hash(data.password)
+            data.set_password(hashed_password)
+            result = await self._repo.add_user(data=data.to_dict())
             return result
         except IntegrityError as ie:
             self._logger.get_logger("WARNING").msg(f"{str(ie)}")

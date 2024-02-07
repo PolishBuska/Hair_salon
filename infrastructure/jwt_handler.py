@@ -8,16 +8,17 @@ from jose import JWTError, jwt
 
 from starlette import status
 
-from injector import inject
 
 from config import get_config
 
 from infrastructure.dependency import get_repository
 from infrastructure.models import User
 
+from application.dto.user import CurrentUserDTO
+
 from api.schemas.jwt import TokenPayLoad
 
-from domain.interfaces.repositories.general import GenericRepositoryInterface
+from infrastructure.repositories.general import GenericRepository
 
 
 class AuthProvider:
@@ -55,11 +56,10 @@ class AuthProvider:
             raise credentials_exception
         return token_data
 
-    @inject
     async def get_current_user(self,
                                token: str = Depends(oauth2_scheme),
                                repo=Depends(get_repository(model=User,
-                                                           repo=GenericRepositoryInterface))):
+                                                           repo=GenericRepository))):
         try:
             credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                                   detail=f'Could not validate credentials',
@@ -70,4 +70,4 @@ class AuthProvider:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail=f'Could not validate credentials',
                                 headers={"WWW-Authenticate": "Bearer"})
-        return user
+        return CurrentUserDTO(user_id=user.id, role_id=user.role_id)

@@ -2,24 +2,22 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from domain.exceptions.user import AuthServiceError
-from domain.interfaces.repositories.user import UserRepositoryInterface
 
 from application.services.login import LoginService
 
 from infrastructure.models import User
 from infrastructure.dependency import get_repository
 
-from injector import inject
 
-router = APIRouter(
-)
+from infrastructure.repositories.user import UserRepository
+
+router = APIRouter()
 
 
 @router.post('/login')
-@inject
 async def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
                 repo=Depends(get_repository(model=User,
-                                            repo=UserRepositoryInterface))):
+                                            repo=UserRepository))):
     try:
         if not user_credentials:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No data provided")
