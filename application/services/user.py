@@ -2,6 +2,7 @@ from sqlalchemy.exc import IntegrityError
 
 from domain.exceptions.user import AlreadyExist, RegistrationError
 from domain.interfaces.repositories.user import UserRepositoryInterface
+from domain.interfaces.services.user import UserServiceInterface
 
 from infrastructure.hasher import PwdContext
 from infrastructure.loggers.container import LoggerContainer
@@ -9,7 +10,7 @@ from infrastructure.loggers.container import LoggerContainer
 from application.dto.user import UserDTO
 
 
-class UserService:
+class UserService(UserServiceInterface):
     def __init__(self, repo: UserRepositoryInterface):
         self._repo = repo
         self._pwd = PwdContext()

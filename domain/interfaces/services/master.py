@@ -5,12 +5,16 @@ class MasterServiceInterface(ABC):
     """
         This class shows the general methods of a master instance
     """
-
     @abstractmethod
-    async def set_date(self):
+    async def create_service(self, *args, **kwargs):
         raise NotImplementedError
 
     @abstractmethod
-    async def approve_date(self):
+    async def assign_timing_to_service(self):
         raise NotImplementedError
+
+    @abstractmethod
+    async def map_service_timing_to_schedule(self):
+        raise NotImplementedError
+
 

@@ -1,8 +1,12 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
 from api.middleware import LoggerMiddleware
 from api.routers.main import create_main_router
+from api.responses import Healthy
+
+from infrastructure.dependency import master_service_stub, user_service_stub, user_service_factory
+from infrastructure.dependency import master_service_factory
 
 from config import get_config
 
@@ -13,7 +17,6 @@ def get_app():
         version="2"
 
     )
-
     main_router = create_main_router(
         prefix="/api/v2",
     )
@@ -24,7 +27,15 @@ def get_app():
 
 
 app = get_app()
+app.dependency_overrides[master_service_stub] = master_service_factory
+app.dependency_overrides[user_service_stub] = user_service_factory
+
 app.add_middleware(LoggerMiddleware)
+
+
+@app.get('/health')
+async def health(a: str):
+    return Healthy(status_code=200, detail=f'{a} Healthy')
 
 
 def run():

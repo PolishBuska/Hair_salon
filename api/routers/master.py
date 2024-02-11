@@ -1,18 +1,17 @@
 from injector import inject
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from infrastructure.dependency import get_repository
-from infrastructure.models import Service
 from infrastructure.loggers.container import LoggerContainer
 from infrastructure.jwt_handler import AuthProvider
+from infrastructure.dependency import master_service_stub
 
-from application.services.master import MasterService
 from application.dto.user import CurrentUserDTO
 
 from domain.exceptions.master import ServiceAlreadyExist, MasterServiceException
+from domain.interfaces.services.master import MasterServiceInterface
 
 from api.schemas.master import ServiceCreate
-from infrastructure.repositories.master import MasterRepository
+
 
 router = APIRouter(
 
@@ -22,15 +21,14 @@ router = APIRouter(
 @router.post('/services')
 async def create_service(
                          service_data: ServiceCreate,
-                         repo=Depends(get_repository(model=Service, repo=MasterRepository)),
+                         master_service: MasterServiceInterface = Depends(master_service_stub),
                          current_user: CurrentUserDTO = Depends(AuthProvider().get_current_user),
 
 ):
     logger = LoggerContainer()
     try:
-        service = MasterService(repo=repo)
         data = service_data.model_dump()
-        result = await service.create_service(
+        result = await master_service.create_service(
             data=data,
             current_user=current_user
         )
@@ -52,3 +50,4 @@ async def get_services():
 @router.get('/services/{service_id}')
 async def get_service(service_id: int):
     ...
+
