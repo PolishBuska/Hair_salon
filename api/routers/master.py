@@ -2,7 +2,7 @@ from injector import inject
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from infrastructure.loggers.container import LoggerContainer
-from infrastructure.jwt_handler import AuthProvider
+from infrastructure.adapters.current_user import get_current_user
 from infrastructure.dependency import master_service_stub
 
 from application.dto.user import CurrentUserDTO
@@ -22,7 +22,7 @@ router = APIRouter(
 async def create_service(
                          service_data: ServiceCreate,
                          master_service: MasterServiceInterface = Depends(master_service_stub),
-                         current_user: CurrentUserDTO = Depends(AuthProvider().get_current_user),
+                         current_user: CurrentUserDTO = Depends(get_current_user),
 
 ):
     logger = LoggerContainer()

@@ -1,29 +1,27 @@
-from fastapi import HTTPException
 
-from infrastructure.auth_validator import AuthCredValidator
-from infrastructure.jwt_handler import AuthProvider
 
 from domain.exceptions.user import WrongCredsException, AuthServiceError
 from domain.interfaces.repositories.user import UserRepositoryInterface
+from domain.models.login import LoginCreds
 
 
 class LoginService:
-    _validator = AuthCredValidator()
-    _jwt = AuthProvider()
 
-    def __init__(self, email, plain_password, repo: UserRepositoryInterface):
-        self._email = email
-        self._plain_password = plain_password
+    def __init__(self, repo: UserRepositoryInterface,
+                 validator,
+                 jwt):
         self._repo = repo
+        self._validator = validator()
+        self._jwt = jwt()
 
-    async def login(self):
+    async def login(self, creds: LoginCreds):
         """getting tokens"""
         try:
 
-            user_by_email = await self._repo.find_one_by_email(email=self._email)
+            user_by_email = await self._repo.find_one_by_email(email=creds.username)
 
             data = await self._validator.validate(
-                                                 plain_password=self._plain_password,
+                                                 plain_password=creds.plain_password,
                                                  db_user=user_by_email
             )
             if not data:

@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from infrastructure.jwt_handler import AuthProvider
 
 router = APIRouter(
 

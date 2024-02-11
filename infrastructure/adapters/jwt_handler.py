@@ -6,19 +6,9 @@ from fastapi.security import OAuth2PasswordBearer
 
 from jose import JWTError, jwt
 
-from starlette import status
-
-
 from config import get_config
 
-from infrastructure.dependency import get_repository
-from infrastructure.models import User
-
-from application.dto.user import CurrentUserDTO
-
 from api.schemas.jwt import TokenPayLoad
-
-from infrastructure.repositories.general import GenericRepository
 
 
 class AuthProvider:
@@ -26,7 +16,7 @@ class AuthProvider:
     SECRET_KEY = config.secret_key
     ALGORITHM = config.algorithm
     ACCESS_TOKEN_EXPIRE_MINUTES = config.access_token_expire_minutes
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/v2/login')
+    oauth2_scheme = config.oauth2_scheme
 
     async def create_access_token(self,
                                   data: dict):
@@ -56,18 +46,6 @@ class AuthProvider:
             raise credentials_exception
         return token_data
 
-    async def get_current_user(self,
-                               token: str = Depends(oauth2_scheme),
-                               repo=Depends(get_repository(model=User,
-                                                           repo=GenericRepository))):
-        try:
-            credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                                  detail=f'Could not validate credentials',
-                                                  headers={"WWW-Authenticate": "Bearer"})
-            token_verified = await self.verify_access_token(token, credentials_exception)
-            user = await repo.find_one(pk=token_verified.user_id)
-        except JWTError:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail=f'Could not validate credentials',
-                                headers={"WWW-Authenticate": "Bearer"})
-        return CurrentUserDTO(user_id=user.id, role_id=user.role_id)
+
+def auth_provider_factory():
+    return AuthProvider()

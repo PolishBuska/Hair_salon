@@ -1,3 +1,4 @@
+from fastapi.security import OAuth2PasswordBearer
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -31,6 +32,10 @@ class Settings(BaseSettings):
               f'{self.database_port}/' \
               f'{self.database_name}_test'
         return url
+
+    @property
+    def oauth2_scheme(self):
+        return OAuth2PasswordBearer(tokenUrl='api/v2/login')
 
 
 def get_config() -> Settings:
