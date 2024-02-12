@@ -46,6 +46,7 @@ async def get_services(master_service: MasterServiceInterface = Depends(master_s
                        current_user: CurrentUserDTO = Depends(current_user_stub)):
     ...
 
+
 @router.get('/services/{service_id}')
 async def get_service(service_id: int):
     ...
