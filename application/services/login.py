@@ -11,8 +11,8 @@ class LoginService:
                  validator,
                  jwt):
         self._repo = repo
-        self._validator = validator()
-        self._jwt = jwt()
+        self._validator = validator
+        self._jwt = jwt
 
     async def login(self, creds: LoginCreds):
         """getting tokens"""

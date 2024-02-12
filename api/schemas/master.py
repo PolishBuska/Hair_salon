@@ -14,8 +14,9 @@ class ServiceBase(BaseModel):
     price: Decimal = Field(
         ...,
         gt=0.000,
-        decimal_places=4,
-        max_digits=4
+        decimal_places=0,
+        max_digits=100,
+
     )
     description: Annotated[str, constr(min_length=15, max_length=400)]
 

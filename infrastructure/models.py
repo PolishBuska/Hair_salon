@@ -40,8 +40,9 @@ class Timing(Base):
 
 class Service(Base):
     __tablename__ = "services"
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(unique=True)
     price = Column(DECIMAL)
     description: Mapped[str]
     created_at = Column(TIMESTAMP(timezone=True),
