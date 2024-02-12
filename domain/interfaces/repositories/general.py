@@ -12,7 +12,7 @@ class GenericRepositoryInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_all(self):
+    async def get_all(self, *args, **kwargs):
         raise NotImplementedError
 
     @abstractmethod

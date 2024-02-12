@@ -1,5 +1,5 @@
 
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped, relationship, registry
 from sqlalchemy.types import DECIMAL
 
 
