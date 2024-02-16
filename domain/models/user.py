@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 
-from domain.models.user_id import UserId
-
 
 @dataclass
 class User:
-    id: UserId
+    email: str
     nickname: str
+    password: str
+    role_id: int
+    enabled: bool = True
+

@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   minio:
       image: docker.io/bitnami/minio:2022
       ports:
@@ -43,6 +44,21 @@ services:
       - 6379:6379
     networks:
       - redis-network
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      - DB_VENDOR=postgres
+      - DB_ADDR=postgres
+      - DB_DATABASE=Beauty_salon
+      - DB_USER=postgres
+      - DB_PASSWORD=7861
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    command: ["start-dev" ]
 
   redis-commander:
     image: rediscommander/redis-commander:latest

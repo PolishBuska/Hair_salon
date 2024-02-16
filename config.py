@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
+    server_url: str
+    username: str
+    password: str
+    realm_name: str
+    client_id: str
+    client_secret_key: str
     model_config = SettingsConfigDict(env_file='.env', extra="allow")
 
     @property

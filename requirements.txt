@@ -1,7 +1,8 @@
 uvicorn~=0.25.0
-fastapi~=0.108.0
+fastapi==0.109.2
 injector~=0.21.0
-pydantic~=2.5.3
+pydantic==2.6.1
 SQLAlchemy~=2.0.23
 passlib~=1.7.4
-starlette~=0.32.0.post1
+starlette==0.36.3
+alembic==1.13.1

@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from jose import JWTError
 
 from application.services.master import MasterService
-from application.services.user import UserService
+from application.services.registration.keycloak import UserService as KUS
+from application.services.registration.custom import UserService
 from application.services.login import LoginService
 from application.dto.user import CurrentUserDTO
 
@@ -17,6 +18,7 @@ from infrastructure.repositories.user import UserRepository
 from infrastructure.adapters.jwt_handler import AuthProvider
 from infrastructure.auth_validator import AuthCredValidator
 from infrastructure.repositories.general import GenericRepository
+from infrastructure.adapters.keycloak.admin import container_factory
 
 
 def get_repository(model, repo):
@@ -72,6 +74,14 @@ def login_service_factory(
         jwt=AuthProvider(),
         validator=AuthCredValidator()
     )
+
+
+def keycloak_service_factory(admin_container=Depends(container_factory)):
+    return KUS(admin_container)
+
+
+def keycloak_service_stub():
+    raise NotImplementedError
 
 
 def current_user_stub(token: str = Depends(get_config().oauth2_scheme)):
