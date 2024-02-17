@@ -1,6 +1,6 @@
 """this module provides with credentials' validator
 free direct usage"""
-from domain.exceptions.user import WrongCredsException, ValidatorError
+from core.exceptions.user import WrongCredsException, ValidatorError
 
 from infrastructure.hasher import PwdContext
 

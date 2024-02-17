@@ -3,7 +3,7 @@ from decimal import Decimal
 import datetime as dt
 from typing import List
 
-from domain.models.user_id import UserId
+from core.models.user_id import UserId
 
 
 @dataclass

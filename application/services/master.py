@@ -1,9 +1,9 @@
 from sqlalchemy.exc import IntegrityError
 
-from domain.exceptions.master import MasterServiceException, ServiceAlreadyExist
-from domain.interfaces.repositories.master import MasterRepositoryInterface
-from domain.models.pagination import Pagination
-from domain.models.service import Services
+from core.exceptions.master import MasterServiceException, ServiceAlreadyExist
+from core.interfaces.repositories.master import MasterRepositoryInterface
+from core.models.pagination import Pagination
+from core.models.service import Services
 
 from infrastructure.loggers.container import LoggerContainer
 

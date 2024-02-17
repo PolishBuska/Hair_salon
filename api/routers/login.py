@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from domain.exceptions.user import AuthServiceError
-from domain.interfaces.services.login import LoginServiceInterface
-from domain.models.login import LoginCreds
+from core.exceptions.user import AuthServiceError
+from core.interfaces.services.login import LoginServiceInterface
+from core.models.login import LoginCreds
 
 from infrastructure.dependency import login_service_stub
 

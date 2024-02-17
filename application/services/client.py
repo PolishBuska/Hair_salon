@@ -1,4 +1,4 @@
-from domain.interfaces.services.client import ClientServiceInterface
+from core.interfaces.services.client import ClientServiceInterface
 from infrastructure.repositories.general import GenericRepository
 
 

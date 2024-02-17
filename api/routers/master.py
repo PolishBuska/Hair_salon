@@ -1,14 +1,14 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 
-from domain.models.pagination import Pagination
+from core.models.pagination import Pagination
 from infrastructure.loggers.container import LoggerContainer
 from infrastructure.dependency import master_service_stub, current_user_stub
 
 from application.dto.user import CurrentUserDTO
 
-from domain.exceptions.master import ServiceAlreadyExist, MasterServiceException
-from domain.interfaces.services.master import MasterServiceInterface
+from core.exceptions.master import ServiceAlreadyExist, MasterServiceException
+from core.interfaces.services.master import MasterServiceInterface
 
 from api.schemas.master import ServiceCreate
 

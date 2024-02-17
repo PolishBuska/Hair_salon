@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from domain.models.login import LoginCreds
+from core.models.login import LoginCreds
 
 
 class LoginServiceInterface(ABC):

@@ -1,6 +1,6 @@
 from keycloak import KeycloakAdmin
 
-from domain.models.user import BaseUser
+from core.models.user import BaseUser
 
 
 class KeycloakGateway:

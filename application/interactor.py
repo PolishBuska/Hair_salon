@@ -1,6 +1,6 @@
-from domain.interfaces.services.user import UserServiceInterface
-from domain.interfaces.interactor import InteractorInterface
-from domain.models.user import User, UserWithId
+from core.interfaces.services.user import UserServiceInterface
+from core.interfaces.interactor import InteractorInterface
+from core.models.user import User, UserWithId
 
 
 class RegistrationInteractor(InteractorInterface):

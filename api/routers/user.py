@@ -4,9 +4,9 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from api.schemas.user import UserCreated
 
 
-from domain.exceptions.user import AlreadyExist
-from domain.models.user import User
-from domain.interfaces.interactor import InteractorInterface
+from core.exceptions.user import AlreadyExist
+from core.models.user import User
+from core.interfaces.interactor import InteractorInterface
 
 from infrastructure.dependency import reg_interactor_stub
 

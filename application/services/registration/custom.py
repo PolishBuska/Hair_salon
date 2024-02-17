@@ -1,13 +1,13 @@
 from sqlalchemy.exc import IntegrityError
 
-from domain.exceptions.user import AlreadyExist, RegistrationError
-from domain.interfaces.repositories.user import UserRepositoryInterface
-from domain.interfaces.services.user import UserServiceInterface
+from core.exceptions.user import AlreadyExist, RegistrationError
+from core.interfaces.repositories.user import UserRepositoryInterface
+from core.interfaces.services.user import UserServiceInterface
 
 from infrastructure.hasher import PwdContext
 from infrastructure.loggers.container import LoggerContainer
 
-from domain.models.user import UserWithId
+from core.models.user import UserWithId
 
 
 class UserService(UserServiceInterface):

@@ -1,6 +1,6 @@
 
-from domain.interfaces.services.user import UserServiceInterface
-from domain.models.user import User
+from core.interfaces.services.user import UserServiceInterface
+from core.models.user import User
 
 from api.schemas.user import Roles
 

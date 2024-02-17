@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from domain.models.pagination import Pagination
+from core.models.pagination import Pagination
 from infrastructure.repositories.general import GenericRepository
 
 

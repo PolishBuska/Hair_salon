@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from domain.interfaces.repositories.general import GenericRepositoryInterface
+from core.interfaces.repositories.general import GenericRepositoryInterface
 
 
 class MasterRepositoryInterface(GenericRepositoryInterface,
