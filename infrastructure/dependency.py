@@ -8,6 +8,7 @@ from application.services.registration.keycloak import UserService as KUS
 from application.services.registration.custom import UserService
 from application.services.login import LoginService
 from application.dto.user import CurrentUserDTO
+from application.interactor import RegistrationInteractor
 
 from config import get_config
 
@@ -78,6 +79,20 @@ def login_service_factory(
 
 def keycloak_service_factory(admin_container=Depends(container_factory)):
     return KUS(admin_container)
+
+
+def registration_interactor_factory(
+        user_service=Depends(user_service_factory),
+        auth_service=Depends(keycloak_service_factory)
+):
+    return RegistrationInteractor(
+        auth_service=auth_service,
+        user_service=user_service
+    )
+
+
+def reg_interactor_stub():
+    raise NotImplementedError
 
 
 def keycloak_service_stub():

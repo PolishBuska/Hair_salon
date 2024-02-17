@@ -1,15 +1,14 @@
 
 from fastapi import APIRouter, HTTPException, status, Depends
 
-from api.schemas.user import UserCreated, UserReturned
+from api.schemas.user import UserCreated
 
-from application.dto.user import UserDTO
 
 from domain.exceptions.user import AlreadyExist
-from domain.interfaces.services.user import UserServiceInterface
 from domain.models.user import User
+from domain.interfaces.interactor import InteractorInterface
 
-from infrastructure.dependency import user_service_stub
+from infrastructure.dependency import reg_interactor_stub
 
 router = APIRouter(
 
@@ -18,12 +17,13 @@ router = APIRouter(
 
 @router.post('/sign-on')
 async def registration(data: UserCreated,
-                       user_service: UserServiceInterface = Depends(user_service_stub)
+                       user_interactor: InteractorInterface = Depends(reg_interactor_stub),
+
                        ):
     try:
         data = data.model_dump()
         user_data = User(**data)
-        result = await user_service.register(user_data)
+        result = await user_interactor.execute(user_data)
         return result
     except AlreadyExist as ae:
         raise HTTPException(

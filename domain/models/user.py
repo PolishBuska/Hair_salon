@@ -2,10 +2,39 @@ from dataclasses import dataclass
 
 
 @dataclass
-class User:
+class BaseUser:
     email: str
     nickname: str
-    password: str
     role_id: int
-    enabled: bool = True
 
+    def to_dict(self):
+        return {
+            'email': self.email,
+            'nickname': self.nickname,
+            'role_id': self.role_id,
+        }
+
+
+@dataclass
+class User(BaseUser):
+    password: str
+
+    def to_dict(self):
+        return {
+            'email': self.email,
+            'nickname': self.nickname,
+            'role_id': self.role_id,
+        }
+
+
+@dataclass
+class UserWithId(BaseUser):
+    id: str
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'nickname': self.nickname,
+            'role_id': self.role_id,
+        }

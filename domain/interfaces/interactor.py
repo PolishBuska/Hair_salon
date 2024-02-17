@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
 
-class UserServiceInterface(ABC):
+class InteractorInterface(ABC):
+
     @abstractmethod
-    async def register(self, *args, **kwargs):
+    async def execute(self, *args, **kwargs):
         raise NotImplementedError

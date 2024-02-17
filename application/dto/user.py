@@ -6,10 +6,18 @@ class UserDTO:
     _nickname: str
 
     def __init__(self, **kwargs):
+        self._uuid = kwargs.get('id')
         self._role_id = kwargs.get('role_id')
         self._email = kwargs.get('email')
         self._password = kwargs.get('password')
         self._nickname = kwargs.get('nickname')
+
+    @property
+    def uuid(self) -> str:
+        """
+        Return the user uuid.
+        """
+        return self._uuid
 
     @property
     def nickname(self) -> str:

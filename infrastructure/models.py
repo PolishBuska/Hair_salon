@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import mapped_column, Mapped, relationship, registry
-from sqlalchemy.types import DECIMAL
+from sqlalchemy.types import DECIMAL, UUID
 
 
 from infrastructure.database import get_base
@@ -18,11 +18,10 @@ class Roles(Base):
 
 class User(Base):
     __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True)
     email: Mapped[str] = mapped_column(unique=True)
     nickname: Mapped[str] = mapped_column(unique=True)
     status: Mapped[bool] = mapped_column(default=True)
-    password: Mapped[str]
     role_id: Mapped[int] = mapped_column(ForeignKey('roles.id'), default=1)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False,
