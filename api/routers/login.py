@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from core.exceptions.user import AuthServiceError
 from core.interfaces.services.login import LoginServiceInterface
-from core.models.login import LoginCreds
+from core.models.user import UserCreds
 
 from infrastructure.dependency import login_service_stub
 
@@ -18,7 +18,7 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No data provided")
 
         token = await service.login(
-            creds=LoginCreds(
+            UserCreds(
                 user_credentials.username, user_credentials.password
             )
         )

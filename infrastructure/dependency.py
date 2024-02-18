@@ -4,9 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from jose import JWTError
 
 from application.services.master import MasterService
-from application.services.registration.keycloak import UserService as KUS
-from application.services.registration.custom import UserService
-from application.services.login import LoginService
+from application.services.sign_on.keycloak import UserService as KuS
+from application.services.sign_on.custom import UserService
+from application.services.sign_in.custom import LoginService
+from application.services.sign_in.keycloak import LoginService as KcLoginService
 from application.dto.user import CurrentUserDTO
 from application.interactor import RegistrationInteractor
 
@@ -77,8 +78,12 @@ def login_service_factory(
     )
 
 
+def keycloak_login_service_factory(admin_container=Depends(container_factory)):
+    return KcLoginService(admin_container)
+
+
 def keycloak_service_factory(admin_container=Depends(container_factory)):
-    return KUS(admin_container)
+    return KuS(admin_container)
 
 
 def registration_interactor_factory(

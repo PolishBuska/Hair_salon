@@ -2,7 +2,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 
 from api.schemas.user import UserCreated
-
+from application.exceptions.services import RegistrationException
 
 from core.exceptions.user import AlreadyExist
 from core.models.user import User
@@ -30,3 +30,8 @@ async def registration(data: UserCreated,
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User already exist"
         ) from ae
+    except RegistrationException as re:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Registration couldn't be finished"
+        ) from re

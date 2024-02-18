@@ -16,6 +16,18 @@ class BaseUser:
 
 
 @dataclass
+class UserCreds:
+    username: str
+    password: str
+
+    def to_dict(self):
+        return {
+            'username': self.username,
+            'password': self.password,
+        }
+
+
+@dataclass
 class User(BaseUser):
     password: str
 

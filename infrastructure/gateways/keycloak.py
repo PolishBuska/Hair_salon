@@ -1,13 +1,13 @@
 from keycloak import KeycloakAdmin
 
-from core.models.user import BaseUser
+from core.models.user import User
 
 
 class KeycloakGateway:
     def __init__(self, admin: KeycloakAdmin):
         self._admin = admin
 
-    def create_user(self, user_data: BaseUser):
+    def create_user(self, user_data: User):
 
         new_user = self._admin.create_user(payload={
             "email": user_data.email,
