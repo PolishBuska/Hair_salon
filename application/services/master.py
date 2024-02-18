@@ -1,7 +1,9 @@
 from sqlalchemy.exc import IntegrityError
 
-from domain.exceptions.master import MasterServiceException, ServiceAlreadyExist
-from domain.interfaces.repositories.master import MasterRepositoryInterface
+from core.exceptions.master import MasterServiceException, ServiceAlreadyExist
+from core.interfaces.repositories.master import MasterRepositoryInterface
+from core.models.pagination import Pagination
+from core.models.service import Services
 
 from infrastructure.loggers.container import LoggerContainer
 
@@ -27,6 +29,18 @@ class MasterService:
             logger.msg(message=f"{str(e)}")
             raise MasterServiceException(
                 f"something went wrong with the creation of service event. Original error {str(e)}"
+                                ) from e
+
+    async def get_services_by_master(self, pagination: Pagination, pk: int) -> Services:
+        try:
+            result = await self._repo.get_services_by_master(pk=pk, pagination=pagination)
+            result = Services(services=result)
+            return result
+        except Exception as e:
+            logger = self._logger.get_logger(name="CRITICAL")
+            logger.msg(message=f"{str(e)}")
+            raise MasterServiceException(
+                f"something went wrong with the getting of services event. Original error {str(e)}"
                                 ) from e
 
     async def assign_timing_to_service(self):

@@ -1,8 +1,8 @@
 
 
-from domain.exceptions.user import WrongCredsException, AuthServiceError
-from domain.interfaces.repositories.user import UserRepositoryInterface
-from domain.models.login import LoginCreds
+from core.exceptions.user import WrongCredsException, AuthServiceError
+from core.interfaces.repositories.user import UserRepositoryInterface
+from core.models.login import LoginCreds
 
 
 class LoginService:

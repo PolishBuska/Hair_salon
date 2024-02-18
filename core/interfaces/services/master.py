@@ -10,6 +10,10 @@ class MasterServiceInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    async def get_services_by_master(self, *args, **kwargs):
+        raise NotImplementedError
+
+    @abstractmethod
     async def assign_timing_to_service(self):
         raise NotImplementedError
 

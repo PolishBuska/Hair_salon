@@ -1,32 +1,37 @@
-from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, status, Depends
 
-from api.schemas.user import UserCreated, UserReturned
+from api.schemas.user import UserCreated
+from application.exceptions.services import RegistrationException
 
-from application.dto.user import UserDTO
+from core.exceptions.user import AlreadyExist
+from core.models.user import User
+from core.interfaces.interactor import InteractorInterface
 
-from domain.exceptions.user import AlreadyExist
-from domain.interfaces.services.user import UserServiceInterface
-
-from infrastructure.dependency import user_service_stub, user_service_factory
+from infrastructure.dependency import reg_interactor_stub
 
 router = APIRouter(
 
 )
 
 
-@router.post('/sign-on', response_model=UserReturned)
+@router.post('/sign-on')
 async def registration(data: UserCreated,
-                       user_service: UserServiceInterface = Depends(user_service_stub)
+                       user_interactor: InteractorInterface = Depends(reg_interactor_stub),
+
                        ):
     try:
         data = data.model_dump()
-        user_data = UserDTO(**data)
-        result = await user_service.register(data=user_data)
+        user_data = User(**data)
+        result = await user_interactor.execute(user_data)
         return result
     except AlreadyExist as ae:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User already exist"
         ) from ae
+    except RegistrationException as re:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Registration couldn't be finished"
+        ) from re

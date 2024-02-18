@@ -1,13 +1,14 @@
-from injector import inject
-from fastapi import APIRouter, Depends, HTTPException, status
 
+from fastapi import APIRouter, Depends, HTTPException, status, Body
+
+from core.models.pagination import Pagination
 from infrastructure.loggers.container import LoggerContainer
 from infrastructure.dependency import master_service_stub, current_user_stub
 
 from application.dto.user import CurrentUserDTO
 
-from domain.exceptions.master import ServiceAlreadyExist, MasterServiceException
-from domain.interfaces.services.master import MasterServiceInterface
+from core.exceptions.master import ServiceAlreadyExist, MasterServiceException
+from core.interfaces.services.master import MasterServiceInterface
 
 from api.schemas.master import ServiceCreate
 
@@ -41,10 +42,14 @@ async def create_service(
 
 
 @router.get('/services')
-@inject
-async def get_services(master_service: MasterServiceInterface = Depends(master_service_stub),
-                       current_user: CurrentUserDTO = Depends(current_user_stub)):
-    ...
+async def get_services(
+        pagination: Pagination = Depends(),
+        master_service: MasterServiceInterface = Depends(master_service_stub),
+        current_user: CurrentUserDTO = Depends(current_user_stub),
+                       ):
+    result = await master_service.get_services_by_master(pagination=pagination, pk=current_user.user_id)
+    return result
+
 
 @router.get('/services/{service_id}')
 async def get_service(service_id: int):

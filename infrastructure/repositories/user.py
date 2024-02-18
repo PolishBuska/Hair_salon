@@ -1,7 +1,7 @@
 from sqlalchemy import select, update
 from infrastructure.repositories.general import GenericRepository
 
-from domain.interfaces.repositories.user import UserRepositoryInterface
+from core.interfaces.repositories.user import UserRepositoryInterface
 
 
 class UserRepository(GenericRepository, UserRepositoryInterface):
