@@ -21,6 +21,7 @@ from infrastructure.adapters.jwt_handler import AuthProvider
 from infrastructure.auth_validator import AuthCredValidator
 from infrastructure.repositories.general import GenericRepository
 from infrastructure.adapters.keycloak.admin import container_factory
+from infrastructure.adapters.keycloak.interface import KeycloakAdminContainer
 
 
 def get_repository(model, repo):
@@ -76,6 +77,20 @@ def login_service_factory(
         jwt=AuthProvider(),
         validator=AuthCredValidator()
     )
+
+
+def get_current_user_kc(token: str = Depends(get_config().oauth2_scheme),
+                        admin_container: KeycloakAdminContainer = Depends(container_factory)):
+    openid = admin_container.get_openid
+    user_data = openid.userinfo(token=token)
+    current_user = CurrentUserDTO(
+        user_id=user_data["sub"],
+        role=user_data["realm_access"]["roles"],
+        email=user_data["email"],
+        email_verified=user_data["email_verified"],
+        username=user_data["preferred_username"]
+    )
+    return current_user
 
 
 def keycloak_login_service_factory(admin_container=Depends(container_factory)):

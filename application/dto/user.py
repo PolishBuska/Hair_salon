@@ -66,35 +66,60 @@ class CurrentUserDTO:
     """
     Data Transfer Object for current user data.
     """
-    _user_id: int
-    _role_id: int
 
-    def __init__(self, user_id: int, role_id: int):
+    def __init__(self, user_id: str, role: str, email: str, email_verified: bool, username: str):
         """
-        Initialize CurrentUserDTO with user id and role id.
+        Initialize CurrentUserDTO with user data.
         """
         self._user_id = user_id
-        self._role_id = role_id
+        self._role = role
+        self._email = email
+        self._email_verified = email_verified
+        self._username = username
 
     @property
-    def user_id(self) -> int:
+    def user_id(self) -> str:
         """
-        Return the user id.
+        Return the user ID.
         """
         return self._user_id
 
     @property
-    def role_id(self) -> int:
+    def role(self) -> str:
         """
-        Return the role id.
+        Return the user's role.
         """
-        return self._role_id
+        return self._role
+
+    @property
+    def email(self) -> str:
+        """
+        Return the user's email.
+        """
+        return self._email
+
+    @property
+    def email_verified(self) -> bool:
+        """
+        Return whether the email is verified.
+        """
+        return self._email_verified
+
+    @property
+    def username(self) -> str:
+        """
+        Return the preferred username.
+        """
+        return self._username
 
     def to_dict(self) -> dict:
         """
         Convert the DTO to a dictionary.
         """
         return {
-            'role_id': self.role_id,
             'user_id': self.user_id,
+            'role': self.role,
+            'email': self.email,
+            'email_verified': self.email_verified,
+            'username': self.username,
         }

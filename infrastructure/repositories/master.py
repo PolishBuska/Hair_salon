@@ -5,8 +5,8 @@ from infrastructure.repositories.general import GenericRepository
 
 
 class MasterRepository(GenericRepository):
-    async def get_services_by_master(self, pk: int, pagination: Pagination):
-        query = (select(self.model).where(self.model.id == pk).
+    async def get_services_by_master(self, pk: str, pagination: Pagination):
+        query = (select(self.model).where(self.model.user_id == str(pk)).
                  filter(
             self.model.name.contains(pagination.search)).
                  limit(
