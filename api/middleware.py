@@ -1,23 +1,15 @@
-from fastapi import Request
+from fastapi import Request, status
+from fastapi.responses import JSONResponse
 
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.responses import Response
 
 from infrastructure.loggers.container import LoggerContainer
+from infrastructure.adapters.keycloak.admin import container_factory
 
+from application.dto.user import CurrentUserDTO
 
-class AuthMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app):
-        super().__init__(app)
-        self._logger = LoggerContainer()
-
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
-        token = request.headers.get("Authorization")
-        if token:
-            response = await call_next(request)
-            return response
+from config import get_config
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
@@ -32,3 +24,65 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         )
         return response
 
+
+class MasterAuthMiddleware(BaseHTTPMiddleware):
+    def __init__(self, app):
+        super().__init__(app)
+        self._openid = container_factory().get_openid
+        self._restricted_path = get_config().master_path
+
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
+        if self._restricted_path in request.url.path:
+            if request.headers.get('Authorization'):
+                token = request.headers.get('Authorization')
+                raw_user = self._openid.userinfo(token.removeprefix('Bearer'))
+                current_user = CurrentUserDTO(
+                    user_id=raw_user["sub"],
+                    role=raw_user["realm_access"]["roles"],
+                    email=raw_user["email"],
+                    email_verified=raw_user["email_verified"],
+                    username=raw_user["preferred_username"]
+                )
+                if self._restricted_path.capitalize() not in current_user.role:
+                    return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content="User's not a Master")
+                request.state.current_user = current_user
+                response = await call_next(request)
+                return response
+            else:
+                return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content="Not Authorized")
+        else:
+            response = await call_next(request)
+            return response
+
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    def __init__(self, app):
+        super().__init__(app)
+        self._openid = container_factory().get_openid
+        self._restricted_path = get_config().master_path
+
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
+        if 'me' in request.url.path:
+            if request.headers.get('Authorization'):
+                token = request.headers.get('Authorization')
+                raw_user = self._openid.userinfo(token.removeprefix('Bearer'))
+                current_user = CurrentUserDTO(
+                    user_id=raw_user["sub"],
+                    role=raw_user["realm_access"]["roles"],
+                    email=raw_user["email"],
+                    email_verified=raw_user["email_verified"],
+                    username=raw_user["preferred_username"]
+                )
+
+                request.state.current_user = current_user
+                response = await call_next(request)
+                return response
+            else:
+                return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content="Not Authorized")
+        else:
+            response = await call_next(request)
+            return response

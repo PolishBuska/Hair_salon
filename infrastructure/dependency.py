@@ -1,5 +1,5 @@
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import JWTError
 
@@ -77,6 +77,10 @@ def login_service_factory(
         jwt=AuthProvider(),
         validator=AuthCredValidator()
     )
+
+
+async def get_current_user_md(request: Request):
+    return request.state.current_user
 
 
 def get_current_user_kc(token: str = Depends(get_config().oauth2_scheme),

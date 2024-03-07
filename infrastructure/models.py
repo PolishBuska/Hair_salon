@@ -1,10 +1,10 @@
 
-from sqlalchemy.orm import mapped_column, Mapped, relationship, registry
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.types import DECIMAL, UUID
 
 
 from infrastructure.database import get_base
-from sqlalchemy import ForeignKey, TIMESTAMP, Column, func, Time
+from sqlalchemy import ForeignKey, TIMESTAMP, Column, func, Time, UniqueConstraint
 
 Base = get_base()
 
@@ -39,14 +39,16 @@ class Timing(Base):
 
 class Service(Base):
     __tablename__ = "services"
+
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(unique=True)
-    price = Column(DECIMAL)
+    name: Mapped[str] = mapped_column(nullable=False)
+    price = Column(DECIMAL, nullable=False)
     description: Mapped[str]
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False,
                         server_default=func.now())
+    __table_args__ = (UniqueConstraint("user_id", "name", name="_user_name_uc"),)
 
 
 class Schedule(Base):
@@ -58,3 +60,4 @@ class Schedule(Base):
 
     service = relationship("Service")
     timing = relationship("Timing")
+

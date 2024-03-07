@@ -1,0 +1,4 @@
+
+
+class MasterServicesNotFound(Exception):
+    ...

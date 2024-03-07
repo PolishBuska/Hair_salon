@@ -1,6 +1,8 @@
-from sqlalchemy import select
+from sqlalchemy import select, insert
 
 from core.models.pagination import Pagination
+from core.exceptions.master import NotFoundServicesByMaster
+
 from infrastructure.repositories.general import GenericRepository
 
 
@@ -10,9 +12,14 @@ class MasterRepository(GenericRepository):
                  filter(
             self.model.name.contains(pagination.search)).
                  limit(
-             pagination.limit).
+            pagination.limit).
                  offset(pagination.offset)
-                 )
+                )
         res = await self.session.execute(query)
-        return res.unique().scalars().all()
+        res = res.unique().scalars().all()
+        if not res:
+            raise NotFoundServicesByMaster(f"Services weren't found")
+        return res
+
+
 

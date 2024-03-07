@@ -1,12 +1,13 @@
 from sqlalchemy.exc import IntegrityError
 
-from core.exceptions.master import MasterServiceException, ServiceAlreadyExist
+from core.exceptions.master import MasterServiceException, ServiceAlreadyExist, NotFoundServicesByMaster
 from core.interfaces.repositories.master import MasterRepositoryInterface
 from core.models.pagination import Pagination
 from core.models.service import Services
 
 from infrastructure.loggers.container import LoggerContainer
 
+from application.exceptions.master import MasterServicesNotFound
 from application.dto.user import CurrentUserDTO
 
 
@@ -36,6 +37,9 @@ class MasterService:
             result = await self._repo.get_services_by_master(pk=pk, pagination=pagination)
             result = Services(services=result)
             return result
+        except NotFoundServicesByMaster as nfsbm:
+            raise MasterServicesNotFound(f"DAO returned nfsbm. Original error {str(nfsbm)}") from nfsbm
+
         except Exception as e:
             logger = self._logger.get_logger(name="CRITICAL")
             logger.msg(message=f"{str(e)}")

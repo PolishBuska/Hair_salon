@@ -5,6 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_host: str
     app_port: int
+    master_path: str
+    customer_path: str
     database_hostname: str
     database_port: str
     database_password: str
