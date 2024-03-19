@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
 
 from core.exceptions.user import AuthServiceError
 from core.interfaces.services.login import LoginServiceInterface
@@ -25,7 +26,9 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
         if not token:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail="Wrong credentials")
-        return token
+        response = JSONResponse({'message': 'success'})
+        response.set_cookie(key='access_token', value=token, httponly=True, samesite='strict', secure=True)
+        return response
     except AuthServiceError:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                             detail="Currently not available")

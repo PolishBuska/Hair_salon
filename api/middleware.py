@@ -1,3 +1,5 @@
+import json
+
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
@@ -35,9 +37,12 @@ class MasterAuthMiddleware(BaseHTTPMiddleware):
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
         if self._restricted_path in request.url.path:
-            if request.headers.get('Authorization'):
-                token = request.headers.get('Authorization')
-                raw_user = self._openid.userinfo(token.removeprefix('Bearer'))
+            if request.cookies.get('access_token'):
+                token = request.cookies.get('access_token')
+                token = token.replace("'", "\"")
+                token_data = json.loads(token)
+                access_token = token_data.get('access_token', '')
+                raw_user = self._openid.userinfo(access_token)
                 current_user = CurrentUserDTO(
                     user_id=raw_user["sub"],
                     role=raw_user["realm_access"]["roles"],
@@ -67,9 +72,13 @@ class AuthMiddleware(BaseHTTPMiddleware):
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
         if 'me' in request.url.path:
-            if request.headers.get('Authorization'):
-                token = request.headers.get('Authorization')
-                raw_user = self._openid.userinfo(token.removeprefix('Bearer'))
+            if request.cookies.get('access_token'):
+                token = request.cookies.get('access_token')
+                token = token.replace("'", "\"")
+                token_data = json.loads(token)
+                access_token = token_data.get('access_token', '')
+
+                raw_user = self._openid.userinfo(access_token)
                 current_user = CurrentUserDTO(
                     user_id=raw_user["sub"],
                     role=raw_user["realm_access"]["roles"],
